@@ -1,1 +1,1 @@
-#Busca saudável.
+#Busca saudável
