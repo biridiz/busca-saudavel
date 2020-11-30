@@ -2,10 +2,11 @@ const { Schema, model } = require("mongoose");
 
 const PessoaSchema = new Schema({
     nome: { type: String, required: true },
-    facebook_token: { type: String, required: true },
-    facebook_url: { type: String, required: true },
-    instagram_token: { type: String, required: true },
-    instagram_url: { type: String, required: true },
+    telefone: { type: String, required: true },
+    facebook_token: { type: String },
+    facebook_url: { type: String },
+    instagram_token: { type: String },
+    instagram_url: { type: String },
     bio: { type: String },
     modalidade: { type: String, required: true },
     ativo: { type: Boolean },
