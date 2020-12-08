@@ -6,6 +6,8 @@ module.exports = (router) => {
 
     router.post('/pessoa/', (req, res) => new PessoaController().create(req, res));
 
+    router.put('/pessoa/:id', (req, res) => new PessoaController().update(req, res));
+
     router.delete('/pessoa/:id', (req, res) => new PessoaController().delete(req, res));
 
   return router;
