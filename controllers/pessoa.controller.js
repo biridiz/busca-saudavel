@@ -6,6 +6,25 @@ class PessoaController {
         this.pessoaRepository = new PessoaRepository();
     }
 
+    async list(req, res) {
+        try {
+            const data = await this.pessoaRepository.findAll();
+
+            res.send({
+                status: true,
+                data: data
+            });
+        } catch (error) {
+            console.error(error);
+            res.send({
+                status: false,
+                message: 'Falha ao buscar dados'
+            });
+        } finally {
+            await this.pessoaRepository.endSession();
+        }
+    }
+
     async create(req, res) {
         try {
             const { body } = req;
