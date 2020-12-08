@@ -4,6 +4,8 @@ module.exports = (router) => {
 
     router.get('/pessoa/', (req, res) => new PessoaController().list(req, res));
 
+    router.get('/pessoa/:id', (req, res) => new PessoaController().detail(req, res));
+
     router.post('/pessoa/', (req, res) => new PessoaController().create(req, res));
 
     router.put('/pessoa/:id', (req, res) => new PessoaController().update(req, res));

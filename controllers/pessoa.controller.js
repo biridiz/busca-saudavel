@@ -25,6 +25,33 @@ class PessoaController {
         }
     }
 
+    async detail(req, res) {
+        try {
+            const { params } = req;
+            const data = await this.pessoaRepository.findById(params.id);
+
+            if (data == null) {
+                return res.send({
+                    status: false,
+                    data: 'Não foi possível encontrar o registro'
+                });
+            }
+
+            res.send({
+                status: true,
+                data: data
+            });
+        } catch (error) {
+            console.error(error);
+            res.send({
+                status: false,
+                message: 'Falha ao buscar dados'
+            });
+        } finally {
+            await this.pessoaRepository.endSession();
+        }
+    }
+
     async create(req, res) {
         try {
             const { body } = req;
