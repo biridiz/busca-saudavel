@@ -57,6 +57,37 @@ class PessoaController {
             await this.pessoaRepository.endSession();
         }
     }
+
+    async delete(req, res) {
+        try {
+            const { body, params } = req;
+            await this.pessoaRepository.startSession();
+
+            const pessoa = await this.pessoaRepository.findById(params.id);
+            
+            if (pessoa == null) {
+                return res.send({
+                    status: false,
+                    data: 'Não foi possível encontrar o registro'
+                });
+            }
+
+            await this.pessoaRepository.destroy(pessoa);
+
+            await this.pessoaRepository.commitSession();
+            res.send({
+                status: true,
+            });
+        } catch (error) {
+            console.error(error);
+            res.send({
+                status: false,
+                message: 'Falha ao deletar o dado'
+            });
+        } finally {
+            await this.pessoaRepository.endSession();
+        }
+    }
 }
 
 module.exports = PessoaController;
