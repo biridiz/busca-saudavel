@@ -12,5 +12,8 @@ module.exports = (router) => {
 
     router.delete('/pessoa/:id', (req, res) => new PessoaController().delete(req, res));
 
+    router.get('/desativar/:id', (req, res) => new PessoaController().deactivate(req, res));
+
+
   return router;
 }
