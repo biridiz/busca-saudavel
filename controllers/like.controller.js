@@ -14,14 +14,14 @@ class LikeController {
 
             const recebeu_like = await this.pessoaRepository.findById(params.id);
             const Like = this.likeRepository.create();
-            
-            recebeu_like.like = Like;
-            await this.pessoaRepository.save(recebeu_like);
 
             Like.like = body.like;
             Like.deu_like = body.deu_like;
             Like.recebeu_like = recebeu_like.id;
 
+            recebeu_like.like = Like;
+
+            await this.pessoaRepository.save(recebeu_like);
             await this.likeRepository.save(Like);
 
             if (Like.like === true) {
