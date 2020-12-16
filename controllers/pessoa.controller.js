@@ -1,4 +1,3 @@
-
 const PessoaRepository = require('../repositories/pessoa.repository');
 
 class PessoaController {
@@ -99,7 +98,6 @@ class PessoaController {
                 });
             }
 
-            // Deve haver uma maneira mais inteligente de fazer isso
             pessoa.nome = body.nome;
             pessoa.telefone = body.telefone;
             pessoa.bio = body.bio;
@@ -147,6 +145,37 @@ class PessoaController {
             res.send({
                 status: false,
                 message: 'Falha ao deletar o dado'
+            });
+        } finally {
+            await this.pessoaRepository.endSession();
+        }
+    }
+
+    async deactivate(req, res) {
+        try {
+            const { params } = req;
+            const pessoa = await this.pessoaRepository.findById(params.id);
+            
+            await this.pessoaRepository.startSession();
+
+            if (pessoa == null) {
+                return res.send({
+                    status: false,
+                    data: 'Não foi possível encontrar o registro'
+                });
+            }
+
+            pessoa.ativo = false;
+            await this.pessoaRepository.save(pessoa);
+
+            res.send({
+                status: true,
+            });
+        } catch (error) {
+            console.error(error);
+            res.send({
+                status: false,
+                message: 'Falha ao buscar dados'
             });
         } finally {
             await this.pessoaRepository.endSession();
