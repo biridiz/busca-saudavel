@@ -13,9 +13,6 @@ app.use(logger('dev'));
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
-// routes load
-routes(app);
-
 // db connect
 mongoose.connect('mongodb+srv://user_uno_escada:LVIUpRmLvA4OqQID@cluster0.xhdsz.mongodb.net/busca_saudavel?retryWrites=true&w=majority', {
   useNewUrlParser: true,
@@ -23,6 +20,19 @@ mongoose.connect('mongodb+srv://user_uno_escada:LVIUpRmLvA4OqQID@cluster0.xhdsz.
   useFindAndModify: false,
   useCreateIndex: true
 });
+
+// enable cros origin request
+app.use(function (req, res, next) {
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
+  res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type');
+  res.setHeader('Access-Control-Allow-Credentials', true);
+
+  next();
+});
+
+// routes load
+routes(app);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
