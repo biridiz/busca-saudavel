@@ -3,6 +3,7 @@ const { Schema, model } = require("mongoose");
 const PessoaSchema = new Schema({
     nome: { type: String, required: true },
     telefone: { type: String, required: true },
+    email: { type: String },
     facebook_token: { type: String },
     facebook_url: { type: String },
     instagram_token: { type: String },
