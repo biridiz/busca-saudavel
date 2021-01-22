@@ -5,6 +5,40 @@ class PessoaController {
         this.pessoaRepository = new PessoaRepository();
     }
 
+    async friends(req, res) {
+        try {
+            const firends = await this.pessoaRepository.findPersonFriends(req.header("id"));
+
+            res.send({
+                status: true,
+                data: firends
+            });
+        } catch (error) {
+            console.error(error);
+            res.send({
+                status: false,
+                message: 'Falha ao buscar dados'
+            });
+        } 
+    }
+
+    async matchPerson(req, res) {
+        try {
+            const person = await this.pessoaRepository.findPersonToMatch(req.header("id"));
+
+            res.send({
+                status: true,
+                data: person
+            });
+        } catch (error) {
+            console.error(error);
+            res.send({
+                status: false,
+                message: 'Falha ao buscar dados'
+            });
+        } 
+    }
+
     async list(req, res) {
         try {
             const data = await this.pessoaRepository.findAll();
@@ -26,8 +60,7 @@ class PessoaController {
 
     async detail(req, res) {
         try {
-            const { params } = req;
-            const data = await this.pessoaRepository.findById(params.id);
+            const data = await this.pessoaRepository.findById(req.header("id"));
 
             if (data == null) {
                 return res.send({
@@ -89,7 +122,7 @@ class PessoaController {
             const { body, params } = req;
             await this.pessoaRepository.startSession();
 
-            const pessoa = await this.pessoaRepository.findById(params.id);
+            const pessoa = await this.pessoaRepository.findById(req.header("id"));
 
             if (pessoa == null) {
                 return res.send({
@@ -154,7 +187,7 @@ class PessoaController {
     async deactivate(req, res) {
         try {
             const { params } = req;
-            const pessoa = await this.pessoaRepository.findById(params.id);
+            const pessoa = await this.pessoaRepository.findById(req.header("id"));
             
             await this.pessoaRepository.startSession();
 
