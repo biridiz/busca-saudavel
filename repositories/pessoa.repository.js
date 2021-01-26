@@ -14,7 +14,7 @@ module.exports = class PessoaRepository extends BaseRepository {
     }
 
     findPersonToMatch(personId) {
-        return this.model.findOne({
+        return this.model.find({
             _id: {
                 $ne: personId
             },

@@ -19,16 +19,19 @@ class PessoaController {
                 status: false,
                 message: 'Falha ao buscar dados'
             });
-        } 
+        }
     }
 
     async matchPerson(req, res) {
         try {
-            const person = await this.pessoaRepository.findPersonToMatch(req.header("id"));
+            const userId = req.header("id");
+            const persons = await this.pessoaRepository.findPersonToMatch(userId);
+
+            const availablePersons = persons.filter(person => !person.like.some(likePerson => likePerson.deu_like == userId));
 
             res.send({
                 status: true,
-                data: person
+                data: availablePersons.length > 0 ? availablePersons[0] : null
             });
         } catch (error) {
             console.error(error);
@@ -36,7 +39,7 @@ class PessoaController {
                 status: false,
                 message: 'Falha ao buscar dados'
             });
-        } 
+        }
     }
 
     async list(req, res) {
@@ -159,7 +162,7 @@ class PessoaController {
             await this.pessoaRepository.startSession();
 
             const pessoa = await this.pessoaRepository.findById(params.id);
-            
+
             if (pessoa == null) {
                 return res.send({
                     status: false,
@@ -188,7 +191,7 @@ class PessoaController {
         try {
             const { params } = req;
             const pessoa = await this.pessoaRepository.findById(req.header("id"));
-            
+
             await this.pessoaRepository.startSession();
 
             if (pessoa == null) {
