@@ -1,17 +1,19 @@
 const PessoaRepository = require('../repositories/pessoa.repository');
+const AmizadeRepository = require('../repositories/amizade.repository');
 
 class PessoaController {
     constructor() {
         this.pessoaRepository = new PessoaRepository();
+        this.amizadeRepository = new AmizadeRepository();
     }
 
     async friends(req, res) {
         try {
-            const firends = await this.pessoaRepository.findPersonFriends(req.header("id"));
+            const friends = await this.amizadeRepository.findByPerson(req.header("id"));
 
             res.send({
                 status: true,
-                data: firends
+                data: friends.map(friend => friend.pessoa2)
             });
         } catch (error) {
             console.error(error);
