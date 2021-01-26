@@ -1,10 +1,12 @@
 const LikeRepository = require('../repositories/like.repository');
-const PessoaRepository = require('../repositories/pessoa.repository')
+const PessoaRepository = require('../repositories/pessoa.repository');
+const AmizadeController = require('../controllers/amizade.controller')
 
 class LikeController {
     constructor() {
         this.likeRepository = new LikeRepository();
         this.pessoaRepository = new PessoaRepository();
+        this.amizadeController = new AmizadeController();
     }
 
     async create(req, res) {
@@ -48,10 +50,11 @@ class LikeController {
         try {
             await this.likeRepository.startSession();
 
-            const friend = await this.likeRepository.findLike(like);
+            const amizade = await this.likeRepository.findLike(like);
 
-            // Se friend não estiver vazio, chamar método de criar amizade
-            console.log(friend);
+            if(amizade.recebeu_like && amizade.deu_like) {
+                this.amizadeController.create(amizade);
+            }
 
             await this.likeRepository.commitSession();
             return true;
