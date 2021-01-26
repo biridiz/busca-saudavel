@@ -13,16 +13,17 @@ class LikeController {
             await this.likeRepository.startSession();
 
             const recebeu_like = await this.pessoaRepository.findById(params.id);
+            const deu_like = await this.pessoaRepository.findById(req.header("id"));
             const Like = this.likeRepository.create();
 
             Like.like = body.like;
-            Like.deu_like = body.deu_like;
-            Like.recebeu_like = recebeu_like.id;
+            Like.deu_like = deu_like._id;
+            Like.recebeu_like = recebeu_like._id;
 
             recebeu_like.like = Like;
 
-            await this.pessoaRepository.save(recebeu_like);
             await this.likeRepository.save(Like);
+            await this.pessoaRepository.save(recebeu_like);
 
             if (Like.like === true) {
                 this.canBeFriend(Like)
