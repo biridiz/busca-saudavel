@@ -1,18 +1,19 @@
 const LikeRepository = require('../repositories/like.repository');
 const PessoaRepository = require('../repositories/pessoa.repository');
-const AmizadeController = require('../controllers/amizade.controller')
+const AmizadeRepository = require('../repositories/amizade.repository');
 
 class LikeController {
     constructor() {
         this.likeRepository = new LikeRepository();
         this.pessoaRepository = new PessoaRepository();
-        this.amizadeController = new AmizadeController();
+        this.amizadeRepository = new AmizadeRepository();
     }
 
     async create(req, res) {
         try {
             const { body, params } = req;
             await this.likeRepository.startSession();
+            await this.amizadeRepository.startSession();
 
             const recebeu_like = await this.pessoaRepository.findById(params.id);
             const deu_like = await this.pessoaRepository.findById(req.header("id"));
@@ -22,16 +23,17 @@ class LikeController {
             Like.deu_like = deu_like._id;
             Like.recebeu_like = recebeu_like._id;
 
-            recebeu_like.like = Like;
+            recebeu_like.like.push(Like);
 
             await this.likeRepository.save(Like);
             await this.pessoaRepository.save(recebeu_like);
 
             if (Like.like === true) {
-                this.canBeFriend(Like)
+                await this.canBeFriend(Like)
             }
 
             await this.likeRepository.commitSession();
+            await this.amizadeRepository.commitSession();
             res.send({
                 status: true,
             });
@@ -43,25 +45,28 @@ class LikeController {
             });
         } finally {
             await this.likeRepository.endSession();
+            await this.amizadeRepository.endSession();
         }
     }
 
     async canBeFriend(like) {
-        try {
-            await this.likeRepository.startSession();
+        const amizade = await this.likeRepository.findLike(like);
 
-            const amizade = await this.likeRepository.findLike(like);
+        console.log({amizade});
+        if (!amizade)
+            return;
 
-            if(amizade.recebeu_like && amizade.deu_like) {
-                this.amizadeController.create(amizade);
-            }
+            const amizadeOrigem = this.amizadeRepository.create();
+            const amizadeDestino = this.amizadeRepository.create();
 
-            await this.likeRepository.commitSession();
-            return true;
-
-        } catch (error) {
-            console.error(error);
-        }
+            amizadeOrigem.pessoa1 = amizade.deu_like;
+            amizadeOrigem.pessoa2 = amizade.recebeu_like;
+            
+            amizadeDestino.pessoa1 = amizade.recebeu_like;
+            amizadeDestino.pessoa2 = amizade.deu_like;
+            
+            await this.amizadeRepository.save(amizadeOrigem);
+            await this.amizadeRepository.save(amizadeDestino);
     }
 }
 
