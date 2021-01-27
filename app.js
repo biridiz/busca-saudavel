@@ -14,7 +14,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
 // db connect
-mongoose.connect('mongodb+srv://user_uno_escada:LVIUpRmLvA4OqQID@cluster0.xhdsz.mongodb.net/busca_saudavel?retryWrites=true&w=majority', {
+mongoose.connect('localhost:3009//uno_escada/busca_saudavel', {
   useNewUrlParser: true,
   useUnifiedTopology: true,
   useFindAndModify: false,
