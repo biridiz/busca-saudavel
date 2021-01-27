@@ -139,8 +139,11 @@ class PessoaController {
             pessoa.nome = body.nome;
             pessoa.telefone = body.telefone;
             pessoa.bio = body.bio;
+            pessoa.idade = body.idade;
             pessoa.modalidade = body.modalidade;
-
+            pessoa.facebook_url = body.facebook;
+            pessoa.instagram_url = body.instagram;
+            
             await this.pessoaRepository.save(pessoa);
 
             await this.pessoaRepository.commitSession();

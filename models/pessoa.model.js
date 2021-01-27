@@ -5,6 +5,7 @@ const PessoaSchema = new Schema({
     image: { type: String, required: true },
     telefone: { type: String, required: true },
     email: { type: String },
+    idade: { type: Number },
     facebook_token: { type: String },
     facebook_url: { type: String },
     instagram_token: { type: String },
